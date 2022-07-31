@@ -10,20 +10,15 @@ function handleSubmit(e) {
     generateNewGif();
 }
 
-function generateNewGif() {
-    fetch(`https://api.giphy.com/v1/gifs/translate?api_key=SxrmidC40mdVSkD1Ica566Q8BUGtHwWK&s=${newGif.value}`, { mode: 'cors', credentials: 'omit' })
-    .then(function (response) {
-        return response.json();
-    })
-    .then(function (response) {
-        status.textContent = `Now showing ${newGif.value.toUpperCase()} GIFs`;
-        img.src = response.data.images.original.url;
-    })
-    .catch( error => {
+async function generateNewGif() {
+    const response = await fetch(`https://api.giphy.com/v1/gifs/translate?api_key=SxrmidC40mdVSkD1Ica566Q8BUGtHwWK&s=${newGif.value}`, { mode: 'cors' });
+    const gifData = await response.json();
+    status.textContent = `Now showing ${newGif.value.toUpperCase()} GIFs`;
+    img.src = gifData.data.images.original.url;
+}
+
+generateNewGif().catch( () => {
         status.textContent = 'No GIFs found';
         img.src = './sad.webp';
         return;
     });
-}
-
-generateNewGif();
